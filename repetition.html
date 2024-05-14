@@ -1,59 +1,64 @@
 <style>
-body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Copperplate Gothic', sans-serif;
-    background-color: grey;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    background-image: url('wifi.png');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-color: grey;
-}
 
-#board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    max-width: 500px;
-    margin: 20px auto;
-    border: 4px solid #555;
-}
+    body {
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        background-image: url('wifi.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-color: grey;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
 
-#board elem{
-    background-color: #fff;
-    height: 80px;
-    width: 80px;
-    border: 4px solid #555;
-}
+    #board {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        max-width: 500px;
+        margin: 20px auto;
+        border: 4px solid #555;
+    }
 
-button {
-    width: 100%;
-    height: 80px;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #4CAF50; /* Green background for buttons */
-    color: white; /* White text for better visibility */
-    border: none; /* Optional: removes border from buttons */
-}
+    #board elem{
+        background-color: #fff;
+        height: 80px;
+        width: 80px;
+        border: 4px solid #555;
+    }
 
-#info {
-    text-align: center;
-    font-size: 30px;
-    color: white;
-    font-family: 'Copperplate Gothic', sans-serif;
-    margin: 20px;
-}
-.prompt {
+    button {
+        width: 100%;
+        height: 80px;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #4CAF50; /* Green background for buttons */
+        color: white; /* White text for better visibility */
+        border: none; /* Optional: removes border from buttons */
+    }
+
+    #info {
+        text-align: center;
+        font-size: 30px;
+        color: white;
+        font-family: 'Copperplate Gothic', sans-serif;
+        margin: 20px;
+    }
+
+    #content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .prompt {
         font-family: 'Copperplate Gothic', sans-serif;
         font-size: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         text-align: center;
         padding: 20px;
         border: 4px solid #555;
@@ -70,6 +75,7 @@ button {
         height: calc(100vh - 250px);
         box-sizing: border-box;
     }
+
     .return {
         width: 100%;
         font-family: 'Copperplate Gothic', sans-serif;
@@ -81,44 +87,57 @@ button {
         color: #333;
         transition: background-color 0.3s, color 0.3s;
     }
-    .return:hover {
-      background-color: #555;
-      color: white;
+
+    button:hover {
+        background-color: #555;
+        color: white;
+    }
+
+    .wifi_ret {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        padding: 20px;
+        border: 4px solid black;
+        cursor: pointer;
+        background-color: white;
+        color: black;
+        transition: background-color 0.3s, color 0.3s;
+        text-align: center;
     }
 
     .wifi {
         font-size: 50px;
         color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         text-align: center;
-        width: 100vw;
-        height: 100vh;
     }
+
 </style>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang = "en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset = "UTF-8">
     <title>Repetition</title>
 </head>
 <body>
     <div id = "Wifi">
         <p class = "wifi">Turn Your Wifi Off To Begin This Activity</p>
+        <a href = "index.html"><button class = "wifi_ret">BACK TO HOME</button></a>
     </div>
-    <div id = "Activity">
 
-        <div id="info">Remaining Left: <span id="tracker">25</span></div>
-        <div id="board"></div>
+    <div id = "Activity">
+        <div id = "info">Remaining Left: <span id = "tracker">25</span></div>
+        <div id = "board"></div>
     </div>
 
     <div id = "Prompt">
-        <label class = "prompt"> Prompt: Write a short story inspired by a recent dream you had.</label>
-        <textarea class = "write" id = "write" placeholder = "Write Here..."></textarea>
-        <a href = "index.html"><button class = "return">BACK TO HOME</button></a>
+        <div id = "content">
+            <label class = "prompt"> Prompt: Write a short story inspired by a recent dream you had.</label>
+            <textarea class = "write" id = "write" placeholder = "Write Here..."></textarea>
+            <a href = "index.html"><button class = "return">BACK TO HOME</button></a>
+        </div>
     </div>
+    
     <audio id = "noise" autoplay loop>
         <source src = "noise.mp3" type = "audio/mp3">
         Your browser does not support the audio element.
