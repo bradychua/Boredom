@@ -6,6 +6,11 @@
         margin: 0;
         padding: 0;
         width: 100vw;
+        background-image: url('wifi.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-color: grey;
     }
 
     #content {
@@ -75,6 +80,17 @@
       background-color: #555;
       color: white;
     }
+
+    .wifi {
+        font-size: 50px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100vw;
+        height: 100vh;
+    }
 </style>
 
 
@@ -85,29 +101,38 @@
     
 </head>
 <body>
-    <div id = "content">
-        <div id = "top">
-            <div class = "timer"><p id = "timer">8m 00s</p></div>
-            <label class = "instruct" id = "instruct">2 Minute Brainstorm</label>
-        </div>
-        <label class = "prompt"> Prompt: What animal would judge us the most? Write a scene where two or more people are doing something silly, and they're being observed and judged by an animal.</label>
-        <textarea class = "write" id = "write" placeholder = "Write Here..."></textarea>
-
-
-        <a href = "index.html"><button class = "return">BACK TO HOME</button></a>
+    <div id = "Wifi">
+        <p class = "wifi">Turn Your Wifi Off To Begin This Activity</p>
     </div>
+    <div id = "Activity">
+        <div id = "content">
+            <div id = "top">
+                <div class = "timer"><p id = "timer">8m 00s</p></div>
+                <label class = "instruct" id = "instruct">2 Minute Brainstorm</label>
+            </div>
+            <label class = "prompt"> Prompt: What animal would judge us the most? Write a scene where two or more people are doing something silly, and they're being observed and judged by an animal.</label>
+            <textarea class = "write" id = "write" placeholder = "Write Here..."></textarea>
 
-    <audio id="clock" autoplay loop>
-        <source src="clock.mp3" type="audio/mp3">
-        Your browser does not support the audio element.
-    </audio>
+
+            <a href = "index.html"><button class = "return">BACK TO HOME</button></a>
+        </div>
+
+        <audio id="clock" autoplay loop>
+            <source src="clock.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
 
 </body>
 </html>
 
 <script>
+    document.getElementById("Wifi").style.display='block';
+    document.getElementById("Activity").style.display='none';
     var begin;
     var x;
+    let time = document.getElementById("timer");
+    var wifi_var;
     let instruct = document.getElementById("instruct");
     let write = document.getElementById("write");
     write.disabled = true;
@@ -130,9 +155,49 @@
             write.disabled = false;
             instruct.innerHTML ="Begin the Process of Writing!";
         }
+        if (navigator.onLine) {
+            clearInterval(x);
+            document.getElementById("Wifi").style.display='block';
+            document.getElementById("Activity").style.display='none';
+            document.body.style.backgroundColor = "gray";
+            document.body.style.backgroundImage = "url(wifi.png)";
+            setTimeout(() => {
+                wifi_var = setInterval(wifi, 1000);
+            }, 1000);
+        }
+
     }
-    setTimeout(() => {
-        begin = new Date().getTime();
-        x = setInterval(timer, 1000);
-    }, 3000);
+
+    function wifi() {
+        if (!(navigator.onLine)) {
+            document.getElementById("Wifi").style.display='none';
+            document.getElementById("Activity").style.display='block';
+            document.body.style.backgroundColor = "white";
+            document.body.style.backgroundImage = 'none';
+            time.innerHTML = "8m 00s";
+            setTimeout(() => {
+                begin = new Date().getTime();
+                x = setInterval(timer, 1000);
+            }, 3000);
+            clearInterval(wifi_var);
+            
+        }
+    }
+    if (navigator.onLine) {
+        setTimeout(() => {
+            wifi_var = setInterval(wifi, 1000);
+        }, 1000);
+    }
+    else {
+        document.getElementById("Wifi").style.display='none';
+        document.getElementById("Activity").style.display='block';
+        document.body.style.backgroundColor = "white";
+        document.body.style.backgroundImage = 'none';
+        time.innerHTML = "8m 00s";
+        setTimeout(() => {
+            begin = new Date().getTime();
+            x = setInterval(timer, 1000);
+        }, 3000);
+        clearInterval(wifi_var);
+    }
 </script>
