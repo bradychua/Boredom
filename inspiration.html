@@ -1,0 +1,293 @@
+<style>
+    body {
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        background-image: url('wifi.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-color: grey;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    button {
+        width: 100%;
+        height: 80px;
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        padding: 20px;
+        border: 4px solid #555;
+        cursor: pointer;
+        background-color: white;
+        color: #333;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    button:hover {
+      background-color: #555;
+      color: white;
+    }
+
+    #content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #row {
+        display: flex;
+        width: 100%;
+    }
+    input {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border: 4px solid #555;
+        width: 40%;
+        height: 80px;
+    }
+    .sketch {
+        border: 4px solid #555;
+        width: 100%;
+        height: 500px;
+    }
+
+    #imageContainer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+        visibility: hidden;
+    }
+    img {
+        max-width: 80%;
+        max-height: 80vh;
+    }
+    .wifi_ret {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        padding: 20px;
+        border: 4px solid black;
+        cursor: pointer;
+        background-color: white;
+        color: black;
+        transition: background-color 0.3s, color 0.3s;
+        text-align: center;
+    }
+
+    .wifi {
+        font-size: 50px;
+        color: white;
+        text-align: center;
+    }
+
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inspiration</title>
+</head>
+<body>
+    <div id = "Begin">
+        <div id="imageContainer">
+            <img src="" id="randomImage" alt="Random Image">
+        </div>
+        <button id = "start">Begin Displaying Images</button>
+    </div>
+
+
+    <div id = "Wifi">
+        <p class = "wifi">Turn Your Wifi Off To Begin This Activity</p>
+        <a href = "index.html"><button class = "wifi_ret">BACK TO HOME</button></a>
+    </div>
+    <div id = "Activity">
+        <div id = "content">
+            <canvas id = "sketch" class = "sketch"></canvas>
+            <div id = "row">
+                <button onclick="clearCanvas()">Clear Canvas</button>
+                <input type="color" id="change_color">
+            </div>
+            <a href = "index.html"><button class = "return">BACK TO HOME</button></a>
+        </div>
+    </div>
+    <audio id = "hum" autoplay loop>
+        <source src = "hum.mp3" type = "audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+</body>
+</html>
+
+<script>
+
+const canvas = document.getElementById('sketch');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = 500;
+
+var wifi_var;
+var checker;
+
+
+let canvasActive = 0;
+let drawing = false;
+let lastx = 0;
+let lasty = 0;
+let color = 'black';
+
+canvas.addEventListener('mousedown', (e) => {
+    drawing = true;
+    lastx = e.offsetX;
+    lasty = e.offsetY;
+});
+
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mouseout', () => drawing = false);
+
+function draw(e) {
+    if (drawing) {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.moveTo(lastx, lasty);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        lastx = e.offsetX;
+        lasty = e.offsetY;
+    }
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+document.getElementById("start").addEventListener("click", () => {
+    document.getElementById("imageContainer").style.visibility = 'visible'; // Make visible
+    displayRandomImage();
+});
+
+document.getElementById('change_color').addEventListener('change', function() {
+    color = this.value;
+});
+
+const images = [
+    'images/image1.jpeg',
+    'images/image2.jpeg',
+    'images/image3.jpeg',
+    'images/image4.jpeg',
+    'images/image5.jpeg',
+    'images/image6.jpeg',
+    'images/image7.jpeg',
+    'images/image8.jpeg',
+    'images/image9.jpeg',
+    'images/image10.jpeg',
+    'images/image11.jpeg',
+    'images/image12.jpeg',
+    'images/image13.jpeg',
+    'images/image14.jpeg',
+    'images/image15.jpeg',
+    'images/image16.jpeg',
+    'images/image17.jpeg',
+    'images/image18.jpeg',
+    'images/image19.jpeg',
+    'images/image20.jpeg'
+];
+
+let displayedImages = [];
+let num_displayed = 0;
+
+function displayRandomImage() {
+    let randomIndex;
+    let randomImage;
+    num_displayed++;
+    do {
+        randomIndex = Math.floor(Math.random() * images.length);
+        randomImage = images[randomIndex];
+    } while (displayedImages.includes(randomImage));
+
+    const imgElement = document.getElementById('randomImage');
+    imgElement.src = randomImage;
+    displayedImages.push(randomImage);
+    if (num_displayed < 5) {
+        setTimeout(displayRandomImage, 10000);
+    }
+    else {
+        document.getElementById("Activity").style.display = 'block';
+        document.getElementById("Begin").style.display = 'none';
+        canvasActive = 1;
+    }
+}
+
+
+function wifi() {
+    if (!(navigator.onLine)) {
+        if (canvasActive) {
+            document.getElementById("Wifi").style.display ='none';
+            document.getElementById("Activity").style.display='block';
+            document.body.style.backgroundColor = "white";
+            document.body.style.backgroundImage = 'none';
+            clearInterval(wifi_var);
+            setTimeout(() => {
+                checker = setInterval(wifi_check, 1000);
+            }, 1000);
+        }
+        else {
+            document.getElementById("Wifi").style.display='none';
+            document.getElementById("Begin").style.display='block';
+            document.body.style.backgroundColor = "white";
+            document.body.style.backgroundImage = 'none';
+            clearInterval(wifi_var);
+            setTimeout(() => {
+                checker = setInterval(wifi_check, 1000);
+            }, 1000);
+        }
+        
+    }
+}
+
+function wifi_check() {
+    if (navigator.onLine) {
+        document.getElementById("Wifi").style.display='block';
+        document.getElementById("Activity").style.display='none';
+        document.getElementById("Begin").style.display='none';
+        document.body.style.backgroundColor = "gray";
+        document.body.style.backgroundImage = "url(wifi.png)";
+        clearInterval(checker);
+        setTimeout(() => {
+            wifi_var = setInterval(wifi, 1000);
+        }, 1000);
+    }
+}
+
+if (navigator.onLine) {
+    document.getElementById("Wifi").style.display='block';
+    document.getElementById("Activity").style.display='none';
+    document.getElementById("Begin").style.display='none';
+    document.body.style.backgroundColor = "gray";
+    document.body.style.backgroundImage = "url(wifi.png)";
+    setTimeout(() => {
+        wifi_var = setInterval(wifi, 1000);
+    }, 1000);
+}
+
+else {
+    document.getElementById("Wifi").style.display='none';
+    document.getElementById("Activity").style.display='none';
+    document.getElementById("Begin").style.display='block';
+    document.body.style.backgroundColor = "white";
+    document.body.style.backgroundImage = 'none';
+    setTimeout(() => {
+        checker= setInterval(wifi_check, 1000);
+    }, 1000);
+}
+
+</script>
