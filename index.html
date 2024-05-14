@@ -55,6 +55,18 @@
 </html>
 
 <script>
- var audio = document.getElementById("whiteNoise");
- audio.volume = 0.01;
-</script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+      var audio = document.getElementById("whiteNoise");
+      var playPromise = audio.play();
+  
+      if (playPromise !== undefined) {
+          playPromise.then(_ => {
+              // Automatic playback started!
+              audio.volume = 0.01;
+          }).catch(error => {
+              // Auto-play was prevented
+              console.log("Playback prevented");
+          });
+      }
+  });
+  </script>
