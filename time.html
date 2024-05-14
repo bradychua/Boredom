@@ -121,7 +121,7 @@
         <div id = "content">
             <div id = "top">
                 <div class = "timer"><p id = "timer">8m 00s</p></div>
-                <label class = "instruct" id = "instruct">2 Minute Brainstorm</label>
+                <label class = "instruct" id = "instruct">Read Over Prompt</label>
             </div>
             <label class = "prompt"> Prompt: What animal would judge us the most? Write a scene where two or more people are doing something silly, and they're being observed and judged by an animal.</label>
             <textarea class = "write" id = "write" placeholder = "Write Here..."></textarea>
@@ -163,10 +163,17 @@
             instruct.innerHTML = "Time is Up";
             write.disabled = true;
         }
-        else if (distance <= 6 * 1000 * 60) {
-            write.disabled = false;
-            instruct.innerHTML ="Begin the Process of Writing!";
+        else if (distance <= (7.0 * 1000 * 60)) {
+            if (distance % (2.5 * 1000 * 60) <= (2 * 1000 * 60)) {
+                write.disabled = false;
+                instruct.innerHTML = "Start Writing! (2 Minutes)";
+            }
+            else {
+                write.disabled = true;
+                instruct.innerHTML = "Sit and Think... (30 Seconds)";
+            }
         }
+
         if (navigator.onLine) {
             clearInterval(x);
             document.getElementById("Wifi").style.display='block';

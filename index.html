@@ -7,15 +7,25 @@
       background-attachment: fixed;
       background-size: cover;
       color: #333;
-      margin: 0;
       height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
     }
 
+    #content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
     button {
+      width: 180px;
+      text-align: center;
       margin: 15px;
       font-size: 25px;
       padding: 15px 30px;
@@ -32,6 +42,26 @@
       color: white;
     }
 
+    #row {
+        display: flex;
+        width: 100%;
+        padding: 10px;
+        border: 4px solid #555;
+    }
+
+    p {
+      padding-right: 30px;
+      font-family: 'Copperplate Gothic', sans-serif;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      border: 4px solid #555;
+      width: 100%;
+      text-align: center;
+    }
+
   </style>
 
 <!DOCTYPE html>
@@ -40,13 +70,25 @@
     <title>Boredom Simulation</title>
   </head>
   <body>
-    <h1>Welcome to the Boredom Simulator</h1>
-    <p>Explore our collection of boring tasks meant to stimulate creativity.</p>
+    <div id = "content">
+      <h1>Welcome to the Boredom Simulator</h1>
+      <p>Explore our collection of boring tasks meant to stimulate creativity.</p>
 
-    <a href = "time.html"> <button> Time </button> </a>
-    <a href = "repetition.html"> <button>  Repetition </button> </a>
-    <a href = "inspiration.html"> <button> Inspiration </button> </a>
+      <div id = "row">
+        <a href = "time.html"> <button> Time </button> </a>
+        <p>Answer a given prompt. Time will alternate between 2 minutes of writing and 30 seconds of sitting and thinking.</p>
+      </div>
 
+      <div id = "row">
+        <a href = "repetition.html"> <button>  Repetition </button> </a>
+        <p>Undergo a monotonous exercise. After completing the exercise, respond to a given prompt.</p>
+      </div>
+
+      <div id = "row">
+        <a href = "inspiration.html"> <button> Inspiration </button> </a>
+        <p>Watch a series of images of everyday items. Afterwards, draw whatever comes to mind in a given sketchpad.</p>
+      </div>
+    </div>
   </body>
 </html>
 
