@@ -1,34 +1,104 @@
+<!DOCTYPE html>
+
 <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    body {
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+    }
 
-        .timer {
-            font-family: 'Copperplate Gothic', sans-serif;
-            font-size: 60px;
-            margin: 0 auto;
-            text-align: center;
-            border: 4px solid #555;
-        }
+    #content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
 
+    #top {
+        display: flex;
+        width: 100%;
+    }
+
+    .timer {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 60px;
+        text-align: center;
+        border: 4px solid #555;
+        width: 50%;
+    }
+
+    .instruct {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border: 4px solid #555;
+        width: 50%;
+    }
+
+    .prompt {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        border: 4px solid #555;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .write {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        padding: 20px;
+        border: 4px solid #555;
+        width: 100%;
+        height: calc(100vh - 360px);
+        box-sizing: border-box;
+    }
+    button {
+        width: 100%;
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        padding: 20px;
+        border: 4px solid #555;
+        cursor: pointer;
+        background-color: white;
+        color: #333;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    button:hover {
+      background-color: #555;
+      color: white;
+    }
 </style>
 
-<!DOCTYPE html>
+
+
 <html>
-    <head>
-        <title>Time</title>
-    </head>
+<head>
+    <title>Time</title>
+    
+</head>
 <body>
+    <div id = "content">
+        <div id = "top">
+            <div class = "timer"><p id = "timer">8m 00s</p></div>
+            <label class = "instruct" id = "instruct">2 Minute Brainstorm</label>
+        </div>
+        <label class = "prompt"> Prompt: What animal would judge us the most? Write a scene where two or more people are doing something silly, and they're being observed and judged by an animal.</label>
+        <textarea class = "write" id = "write" placeholder = "Write Here..."></textarea>
 
-    <div class="timer"><p id="timer">10m 00s</p></div>
 
+        <a href = "index.html"><button class = "return">BACK TO HOME</button></a>
+    </div>
 
-    <audio id = "clock" autoplay loop>
-        <source src = "clock.mp3" type = "audio/mp3">
+    <audio id="clock" autoplay loop>
+        <source src="clock.mp3" type="audio/mp3">
         Your browser does not support the audio element.
     </audio>
 
@@ -36,26 +106,33 @@
 </html>
 
 <script>
-var begin;
-var x;
+    var begin;
+    var x;
+    let instruct = document.getElementById("instruct");
+    let write = document.getElementById("write");
+    write.disabled = true;
+    function timer() {
+        var current = new Date().getTime();
+        var distance = begin - current + (8 * 1000 * 60);
 
-function timer() {
-    var current = new Date().getTime();
-    var distance = begin - current + (1 * 1000 * 60);
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
 
-  document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
-
-  if (distance <= 0) {
-    clearInterval(x);
-    document.getElementById("timer").innerHTML = "Expired";
-  }
-}
-setTimeout(() => {
-    begin = new Date().getTime();
-    x = setInterval(timer, 1000);
-}, "3000");
-
+        if (distance <= 0) {
+            clearInterval(x);
+            document.getElementById("timer").innerHTML = "Expired";
+            instruct.innerHTML ="Time is Up";
+            write.disabled = true;
+        }
+        else if (distance <= 6 * 1000 * 60) {
+            write.disabled = false;
+            instruct.innerHTML ="Begin the Process of Writing!";
+        }
+    }
+    setTimeout(() => {
+        begin = new Date().getTime();
+        x = setInterval(timer, 1000);
+    }, 3000);
 </script>
