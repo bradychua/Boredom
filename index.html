@@ -68,35 +68,6 @@
 <html lang="en">
   <head>
     <title>Boredom Simulation</title>
-
-    <link rel="preload" href="images/image1.jpeg" as="image" />
-    <link rel="preload" href="images/image2.jpeg" as="image" />
-    <link rel="preload" href="images/image3.jpeg" as="image" />
-    <link rel="preload" href="images/image4.jpeg" as="image" />
-    <link rel="preload" href="images/image5.jpeg" as="image" />
-    <link rel="preload" href="images/image6.jpeg" as="image" />
-    <link rel="preload" href="images/image7.jpeg" as="image" />
-    <link rel="preload" href="images/image8.jpeg" as="image" />
-    <link rel="preload" href="images/image9.jpeg" as="image" />
-    <link rel="preload" href="images/image10.jpeg" as="image" />
-    <link rel="preload" href="images/image11.jpeg" as="image" />
-    <link rel="preload" href="images/image12.jpeg" as="image" />
-    <link rel="preload" href="images/image13.jpeg" as="image" />
-    <link rel="preload" href="images/image14.jpeg" as="image" />
-    <link rel="preload" href="images/image15.jpeg" as="image" />
-    <link rel="preload" href="images/image16.jpeg" as="image" />
-    <link rel="preload" href="images/image17.jpeg" as="image" />
-    <link rel="preload" href="images/image18.jpeg" as="image" />
-    <link rel="preload" href="images/image19.jpeg" as="image" />
-    <link rel="preload" href="images/image20.jpeg" as="image" />
-    <link rel="preload" href="wifi.png" as="image" />
-    <link rel="preload" href="wall.jpeg" as="image" />
-    <audio preload="auto"> 
-      <source src="clock.mp3" type="audio/mp3"> 
-      <source src="noise.mp3" type="audio/mp3"> 
-      <source src="hum.mp3" type="audio/mp3"> 
-   </audio>
-
   </head>
   <body>
     <div id = "content">
@@ -121,86 +92,5 @@
   </body>
 </html>
 
-    <script>
-        // Inline Service Worker code
-        const swCode = `
-            const CACHE_NAME = 'offline-cache-v1';
-            const urlsToCache = [
-                '/',
-                '/index.html',
-                '/time.html',
-                '/repetition.html',
-                '/inspiration.html',
-                // Add other files you want to cache
-            ];
-
-            self.addEventListener('install', event => {
-                event.waitUntil(
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            console.log('Opened cache');
-                            return cache.addAll(urlsToCache);
-                        })
-                );
-            });
-
-            self.addEventListener('fetch', event => {
-                event.respondWith(
-                    caches.match(event.request)
-                        .then(response => {
-                            // Cache hit - return the response from the cached version
-                            if (response) {
-                                return response;
-                            }
-                            return fetch(event.request).then(
-                                response => {
-                                    // Check if we received a valid response
-                                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                                        return response;
-                                    }
-
-                                    // IMPORTANT: Clone the response. A response is a stream
-                                    // and because we want the browser to consume the response
-                                    // as well as the cache consuming the response, we need
-                                    // to clone it so we have two streams.
-                                    const responseToCache = response.clone();
-
-                                    caches.open(CACHE_NAME)
-                                        .then(cache => {
-                                            cache.put(event.request, responseToCache);
-                                        });
-
-                                    return response;
-                                }
-                            );
-                        })
-                );
-            });
-
-            self.addEventListener('activate', event => {
-                const cacheWhitelist = [CACHE_NAME];
-                event.waitUntil(
-                    caches.keys().then(cacheNames => {
-                        return Promise.all(
-                            cacheNames.map(cacheName => {
-                                if (cacheWhitelist.indexOf(cacheName) === -1) {
-                                    return caches.delete(cacheName);
-                                }
-                            })
-                        );
-                    })
-                );
-            });
-        `;
-
-        // Register the Service Worker
-        if ('serviceWorker' in navigator) {
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const url = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(url).then(registration => {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, error => {
-                console.log('ServiceWorker registration failed: ', error);
-            });
-        }
-    </script>
+<script>
+</script>
