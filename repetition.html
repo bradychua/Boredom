@@ -16,9 +16,68 @@
         flex-direction: column;
     }
 
+    #board {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        max-width: 500px;
+        margin: 20px auto;
+        border: 4px solid #555;
+    }
+
+    #board elem{
+        background-color: #fff;
+        height: 80px;
+        width: 80px;
+        border: 4px solid #555;
+    }
+
     button {
         width: 100%;
         height: 80px;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #4CAF50; /* Green background for buttons */
+        color: white; /* White text for better visibility */
+        border: none; /* Optional: removes border from buttons */
+    }
+
+    #info {
+        text-align: center;
+        font-size: 30px;
+        color: white;
+        font-family: 'Copperplate Gothic', sans-serif;
+        margin: 20px;
+    }
+
+    #content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .prompt {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        text-align: center;
+        padding: 20px;
+        border: 4px solid #555;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .write {
+        font-family: 'Copperplate Gothic', sans-serif;
+        font-size: 20px;
+        padding: 20px;
+        border: 4px solid #555;
+        width: 100%;
+        height: calc(100vh - 250px);
+        box-sizing: border-box;
+    }
+
+    .return {
+        width: 100%;
         font-family: 'Copperplate Gothic', sans-serif;
         font-size: 20px;
         padding: 20px;
@@ -30,50 +89,8 @@
     }
 
     button:hover {
-      background-color: #555;
-      color: white;
-    }
-
-    #content {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    #row {
-        display: flex;
-        width: 100%;
-    }
-
-    input {
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        border: 4px solid #555;
-        width: 40%;
-        height: 80px;
-    }
-
-    .sketch {
-        border: 4px solid #555;
-        width: 100%;
-        height: 500px;
-    }
-
-    #imageContainer {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 90vh;
-        visibility: hidden;
-    }
-
-    img {
-        max-width: 80%;
-        max-height: 80vh;
+        background-color: #555;
+        color: white;
     }
 
     .wifi_ret {
@@ -100,164 +117,83 @@
 <html lang = "en">
 <head>
     <meta charset = "UTF-8">
-    <title>Inspiration</title>
-    <link rel="preload" href="images/image1.jpeg" as="image" />
-    <link rel="preload" href="images/image2.jpeg" as="image" />
-    <link rel="preload" href="images/image3.jpeg" as="image" />
-    <link rel="preload" href="images/image4.jpeg" as="image" />
-    <link rel="preload" href="images/image5.jpeg" as="image" />
-    <link rel="preload" href="images/image6.jpeg" as="image" />
-    <link rel="preload" href="images/image7.jpeg" as="image" />
-    <link rel="preload" href="images/image8.jpeg" as="image" />
-    <link rel="preload" href="images/image9.jpeg" as="image" />
-    <link rel="preload" href="images/image10.jpeg" as="image" />
-    <link rel="preload" href="images/image11.jpeg" as="image" />
-    <link rel="preload" href="images/image12.jpeg" as="image" />
-    <link rel="preload" href="images/image13.jpeg" as="image" />
-    <link rel="preload" href="images/image14.jpeg" as="image" />
-    <link rel="preload" href="images/image15.jpeg" as="image" />
-    <link rel="preload" href="images/image16.jpeg" as="image" />
-    <link rel="preload" href="images/image17.jpeg" as="image" />
-    <link rel="preload" href="images/image18.jpeg" as="image" />
-    <link rel="preload" href="images/image19.jpeg" as="image" />
-    <link rel="preload" href="images/image20.jpeg" as="image" />
+    <title>Repetition</title>
 </head>
 <body>
-    <div id = "Begin">
-        <div id = "imageContainer">
-            <img src = "" id = "randomImage" alt = "Random Image">
-        </div>
-        <button id = "start">Begin Displaying Images</button>
-    </div>
-
     <div id = "Wifi">
         <p class = "wifi">Turn Your Wifi Off To Begin This Activity</p>
         <a href = "index.html"><button class = "wifi_ret">BACK TO HOME</button></a>
     </div>
 
     <div id = "Activity">
+        <div id = "info">Remaining Left: <span id = "tracker">25</span></div>
+        <div id = "board"></div>
+    </div>
+
+    <div id = "Prompt">
         <div id = "content">
-            <canvas id = "sketch" class = "sketch"></canvas>
-            <div id = "row">
-                <button onclick = "clearCanvas()">Clear Canvas</button>
-                <input type = "color" id = "change_color">
-            </div>
+            <label class = "prompt"> Prompt: Write a short story inspired by a recent dream you had.</label>
+            <textarea class = "write" id = "write" placeholder = "Write Here..."></textarea>
             <a href = "index.html"><button class = "return">BACK TO HOME</button></a>
         </div>
     </div>
-
-    <audio id = "hum" autoplay loop>
-        <source src = "hum.mp3" type = "audio/mp3">
+    
+    <audio id = "noise" autoplay loop>
+        <source src = "noise.mp3" type = "audio/mp3">
         Your browser does not support the audio element.
     </audio>
 </body>
 </html>
 
 <script>
-
-const canvas = document.getElementById('sketch');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = 500;
+var audio = document.getElementById("noise");
+audio.volume = 0.01;
+let on_activity = 1;
 var wifi_var;
 var checker;
-let canvasActive = 0;
-let drawing = false;
-let lastx = 0;
-let lasty = 0;
-let color = 'black';
 
-canvas.addEventListener('mousedown', (e) => {
-    drawing = true;
-    lastx = e.offsetX;
-    lasty = e.offsetY;
-});
-
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', () => drawing = false);
-canvas.addEventListener('mouseout', () => drawing = false);
-
-function draw(e) {
-    if (drawing) {
-        ctx.beginPath();
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-        ctx.moveTo(lastx, lasty);
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
-        lastx = e.offsetX;
-        lasty = e.offsetY;
-    }
+function switch_prompt() {
+    on_activity = 0;
+    document.getElementById("Prompt").style.display='block';
+    document.getElementById("Activity").style.display='none';
+    document.body.style.backgroundColor = "white";
 }
 
-function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+var board = document.getElementById('board');
+var tracker = document.getElementById('tracker');
+let remaining = 25;
+
+function createButton() {
+    var button = document.createElement('button');
+    button.color = "green";
+    button.onclick = function() {
+        remaining--;
+        tracker.textContent = remaining;
+        this.remove();
+        if (remaining <= 0) {
+            switch_prompt();
+        }
+        else {
+            setTimeout(createButton, Math.random() * 3000);
+        }
+    };
+    var elem = board.querySelectorAll('elem');
+    elem[Math.floor(Math.random() * elem.length)].appendChild(button);
 }
 
-document.getElementById("start").addEventListener("click", () => {
-    document.getElementById("imageContainer").style.visibility = 'visible';
-    document.getElementById("start").style.visibility = "hidden";
-    displayRandomImage();
-});
-
-document.getElementById('change_color').addEventListener('change', function() {
-    color = this.value;
-});
-
-const images = [
-    'images/image1.jpeg',
-    'images/image2.jpeg',
-    'images/image3.jpeg',
-    'images/image4.jpeg',
-    'images/image5.jpeg',
-    'images/image6.jpeg',
-    'images/image7.jpeg',
-    'images/image8.jpeg',
-    'images/image9.jpeg',
-    'images/image10.jpeg',
-    'images/image11.jpeg',
-    'images/image12.jpeg',
-    'images/image13.jpeg',
-    'images/image14.jpeg',
-    'images/image15.jpeg',
-    'images/image16.jpeg',
-    'images/image17.jpeg',
-    'images/image18.jpeg',
-    'images/image19.jpeg',
-    'images/image20.jpeg'
-];
-
-let displayedImages = [];
-let num_displayed = 0;
-
-function displayRandomImage() {
-    let randomIndex;
-    let randomImage;
-    num_displayed++;
-    do {
-        randomIndex = Math.floor(Math.random() * images.length);
-        randomImage = images[randomIndex];
-    } while (displayedImages.includes(randomImage));
-
-    const imgElement = document.getElementById('randomImage');
-    imgElement.src = randomImage;
-    displayedImages.push(randomImage);
-    if (num_displayed < 5) {
-        setTimeout(displayRandomImage, 10000);
-    }
-    else {
-        document.getElementById("Activity").style.display = 'block';
-        document.getElementById("Begin").style.display = 'none';
-        canvasActive = 1;
-    }
+for (let i = 0; i < 25; i++) {
+    var elem = document.createElement('elem');
+    board.appendChild(elem);
 }
+
+createButton();
 
 function wifi() {
     if (!(navigator.onLine)) {
-        if (canvasActive) {
-            document.getElementById("Wifi").style.display ='none';
+        if (on_activity) {
+            document.getElementById("Wifi").style.display='none';
             document.getElementById("Activity").style.display='block';
-            document.body.style.backgroundColor = "white";
+            document.body.style.backgroundColor = "grey";
             document.body.style.backgroundImage = 'none';
             clearInterval(wifi_var);
             setTimeout(() => {
@@ -266,7 +202,7 @@ function wifi() {
         }
         else {
             document.getElementById("Wifi").style.display='none';
-            document.getElementById("Begin").style.display='block';
+            document.getElementById("Prompt").style.display='block';
             document.body.style.backgroundColor = "white";
             document.body.style.backgroundImage = 'none';
             clearInterval(wifi_var);
@@ -282,7 +218,7 @@ function wifi_check() {
     if (navigator.onLine) {
         document.getElementById("Wifi").style.display='block';
         document.getElementById("Activity").style.display='none';
-        document.getElementById("Begin").style.display='none';
+        document.getElementById("Prompt").style.display='none';
         document.body.style.backgroundColor = "gray";
         document.body.style.backgroundImage = "url(wifi.png)";
         clearInterval(checker);
@@ -295,7 +231,7 @@ function wifi_check() {
 if (navigator.onLine) {
     document.getElementById("Wifi").style.display='block';
     document.getElementById("Activity").style.display='none';
-    document.getElementById("Begin").style.display='none';
+    document.getElementById("Prompt").style.display='none';
     document.body.style.backgroundColor = "gray";
     document.body.style.backgroundImage = "url(wifi.png)";
     setTimeout(() => {
@@ -305,9 +241,9 @@ if (navigator.onLine) {
 
 else {
     document.getElementById("Wifi").style.display='none';
-    document.getElementById("Activity").style.display='none';
-    document.getElementById("Begin").style.display='block';
-    document.body.style.backgroundColor = "white";
+    document.getElementById("Activity").style.display='block';
+    document.getElementById("Prompt").style.display='none';
+    document.body.style.backgroundColor = "grey";
     document.body.style.backgroundImage = 'none';
     setTimeout(() => {
         checker= setInterval(wifi_check, 1000);
@@ -315,3 +251,4 @@ else {
 }
 
 </script>
+
