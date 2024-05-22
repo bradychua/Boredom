@@ -91,9 +91,6 @@
     <link rel="preload" href="images/image20.jpeg" as="image" />
     <link rel="preload" href="wifi.png" as="image" />
     <link rel="preload" href="wall.jpeg" as="image" />
-    <link rel="prefetch" href="time.html" />
-    <link rel="prefetch" href="repetition.html" />
-    <link rel="prefetch" href="inspiration.html" />
     <audio preload="auto"> 
       <source src="clock.mp3" type="audio/mp3"> 
       <source src="noise.mp3" type="audio/mp3"> 
@@ -124,5 +121,85 @@
   </body>
 </html>
 
-<script>
-</script>
+    <script>
+        // Inline Service Worker code
+        const swCode = `
+            const CACHE_NAME = 'offline-cache-v1';
+            const urlsToCache = [
+                '/',
+                '/index.html',
+                '/styles.css',
+                '/script.js',
+                // Add other files you want to cache
+            ];
+
+            self.addEventListener('install', event => {
+                event.waitUntil(
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            console.log('Opened cache');
+                            return cache.addAll(urlsToCache);
+                        })
+                );
+            });
+
+            self.addEventListener('fetch', event => {
+                event.respondWith(
+                    caches.match(event.request)
+                        .then(response => {
+                            // Cache hit - return the response from the cached version
+                            if (response) {
+                                return response;
+                            }
+                            return fetch(event.request).then(
+                                response => {
+                                    // Check if we received a valid response
+                                    if (!response || response.status !== 200 || response.type !== 'basic') {
+                                        return response;
+                                    }
+
+                                    // IMPORTANT: Clone the response. A response is a stream
+                                    // and because we want the browser to consume the response
+                                    // as well as the cache consuming the response, we need
+                                    // to clone it so we have two streams.
+                                    const responseToCache = response.clone();
+
+                                    caches.open(CACHE_NAME)
+                                        .then(cache => {
+                                            cache.put(event.request, responseToCache);
+                                        });
+
+                                    return response;
+                                }
+                            );
+                        })
+                );
+            });
+
+            self.addEventListener('activate', event => {
+                const cacheWhitelist = [CACHE_NAME];
+                event.waitUntil(
+                    caches.keys().then(cacheNames => {
+                        return Promise.all(
+                            cacheNames.map(cacheName => {
+                                if (cacheWhitelist.indexOf(cacheName) === -1) {
+                                    return caches.delete(cacheName);
+                                }
+                            })
+                        );
+                    })
+                );
+            });
+        `;
+
+        // Register the Service Worker
+        if ('serviceWorker' in navigator) {
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(url).then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, error => {
+                console.log('ServiceWorker registration failed: ', error);
+            });
+        }
+    </script>
